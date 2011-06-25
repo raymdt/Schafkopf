@@ -6,19 +6,15 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.R.color;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
 import android.opengl.GLUtils;
 
 
@@ -34,6 +30,9 @@ public class Karte {
 	private float scaleX = 1;
 	private float scaleY = 1;
 	private boolean isSelect;
+	public int karteId;
+	
+
 
 
 
@@ -85,7 +84,7 @@ public class Karte {
 			1.0f, 0.0f };	
 
 
-	public Karte() {
+	public Karte(int id) {
 
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -93,7 +92,7 @@ public class Karte {
 		vertexBuffer = byteBuf.asFloatBuffer();
 		vertexBuffer.put(vertices);
 		vertexBuffer.position(0);
-
+		this.karteId = id;
 
 
 		byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
@@ -169,7 +168,7 @@ public class Karte {
 
 		//nicht auf device Pixel skalieren
 		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inScaled = false;
+		opts.inScaled = true;
 
 
 
