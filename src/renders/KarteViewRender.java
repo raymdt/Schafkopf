@@ -15,6 +15,7 @@ import forms.Karte;
 public class KarteViewRender extends GLSurfaceView implements Renderer {
 
 	private Karte karte;	
+	private Karte selectedKarte = null;
 
 	 private final float TOUCH_SCALE_FACTOR = 500.f/320;
 	private Context context;
@@ -87,9 +88,12 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 //		for(int i=0;i<8;i++) {
 		
 	
-			gl.glTranslatef(karte.getPosX(), karte.getPosY(), 0);
 			gl.glScalef(karte.getScaleX(), karte.getScaleY(),1);
-			karte.draw(gl, this.context,"eichel10.jpg");	
+			karte.draw(gl, this.context,"eichel10.jpg");
+			this.selectedKarte= karte;
+			//gl.glTranslatef(karte.getPosX(), karte.getPosY(), 0);
+		
+				
 //			
 //			gl.glTranslatef(65, y, z);
 //			
@@ -124,28 +128,41 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		if(this.karte.isPointInclude(x,y)) {
 		
 		 switch (event.getAction()) {
-		   case MotionEvent.ACTION_MOVE:
-		   {
-           
-           float dx= x-mPreviousX;
-           float dy= y-mpreviousY;
-           
-           
-           karte.setPosX(karte.getPosX()+dx);
-           karte.setPosY(karte.getPosY()+dy);
-           requestRender();
-			
-           
-  		 mPreviousX=x;
-		 mpreviousY=y;
-           
-		   break;
-		   }	
+//		   case MotionEvent.ACTION_MOVE:
+//		   {
+//           
+//           float dx= x - mPreviousX;
+//           float dy= y - mpreviousY;
+//           
+//           
+//           karte.setPosX(karte.getPosX()+dx);
+//           karte.setPosY(karte.getPosY()+dy);
+//           requestRender();
+//			
+//           
+//  		 mPreviousX=x;
+//		 mpreviousY=y;
+//           
+//		   break;
+//		   }	
 		   
-			 case  MotionEvent.ACTION_DOWN:{
+			 case  MotionEvent.ACTION_UP:{
 				 
+				 if(karte.isSelect()) {
+				 karte.setScaleX(1.f);
+				 karte.setScaleY(1.f);
+				 karte.setSizeX(karte.getSizeX()/1.3f);
+				 karte.setSizeY(karte.getSizeY()/1.3f);
+
+				 karte.setSelect(false);
+			 }
+				 else {
 				 karte.setScaleX(1.3f);
-				 karte.setScaleY(1.2f);
+				 karte.setScaleY(1.3f);
+				 karte.setSizeX(karte.getSizeX()*1.3f);
+				 karte.setSizeY(karte.getSizeY()*1.3f);
+				 karte.setSelect(true);
+				 }
 			break;
 			 }
 		 
@@ -159,6 +176,9 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		
 
 }
+		else {
+			Log.d("BOOOOO","Nicht select");
+		}
 		return true;
 	}
 }

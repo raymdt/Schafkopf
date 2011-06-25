@@ -33,6 +33,7 @@ public class Karte {
 	private float sizeY=120;
 	private float scaleX = 1;
 	private float scaleY = 1;
+	private boolean isSelect;
 
 
 
@@ -100,7 +101,7 @@ public class Karte {
 		textureBuffer = byteBuf.asFloatBuffer();
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
-
+		isSelect= false;
 	}
 
 
@@ -378,6 +379,16 @@ public class Karte {
 
 	public void setSizeY(float sizeY) {
 		this.sizeY = sizeY;
+	}
+
+
+	public boolean isSelect() {
+		return isSelect;
+	}
+
+
+	public void setSelect(boolean isSelect) {
+		this.isSelect = isSelect;
 	}
 
 
