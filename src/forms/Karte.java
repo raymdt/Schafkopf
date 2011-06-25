@@ -25,8 +25,8 @@ public class Karte {
 	public String imageUrl;
 	private float posX =0;
 	private float posY =0;
-	private float sizeX=60;
-	private float sizeY=120;
+	private float sizeX=56;
+	private float sizeY=112;
 	private float scaleX = 1;
 	private float scaleY = 1;
 	private boolean isSelect;

@@ -97,10 +97,10 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		for(int j =0; j <playerKarten.size();j++) {
 			gl.glPushMatrix();
 			Karte temp = playerKarten.get(j);			
-			gl.glTranslatef(72*j,0, 0);
+			gl.glTranslatef(70*j,0, 0);
 			gl.glScalef(temp.getScaleX(), temp.getScaleY(),1);
-			temp.setPosX(72*j);
-			temp.draw(gl, this.context,"lasto.jpg");
+			temp.setPosX(70*j);
+			temp.draw(gl, this.context,"bilpng.png");
 			Log.d("LES POSITIONS de "+j, temp.getPosX()+"   "+temp.getPosY());
 			gl.glPopMatrix();
 		
@@ -154,29 +154,32 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 				 karte.setSizeY(karte.getSizeY()/1.2f);
 
 				 karte.setSelect(false);
+				 this.selectedKarte=null;
 			 }
 				 else {
-				 karte.setScaleX(1.3f);
-				 karte.setScaleY(1.3f);
+				 karte.setScaleX(1.2f);
+				 karte.setScaleY(1.2f);
 				 karte.setSizeX(karte.getSizeX()*1.2f);
 				 karte.setSizeY(karte.getSizeY()*1.2f);
 				 karte.setSelect(true);
+				 
+				 
+				 if(this.selectedKarte!=null) {
+					 this.selectedKarte.setScaleX(1.f);
+					 this.selectedKarte.setScaleY(1.f);
+					 this.selectedKarte.setSizeX(this.selectedKarte.getSizeX()/1.2f);
+					 this.selectedKarte.setSizeY(this.selectedKarte.getSizeY()/1.2f);
+
+					 this.selectedKarte.setSelect(false);
+				 }
+				 
 				 this.selectedKarte= karte;
 				 
 				 }
 				 requestRender();
 			break;
 			 }
-		 
-
-		 
-		 
-		 
-		 
-		 
 	}
-		
-
 }
 		else {
 			Log.d("BOOOOO","Nicht select");
@@ -184,7 +187,12 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 	}
 		return true;
 	}
+	
+	
+	
+	
 }
+
 
 
 
