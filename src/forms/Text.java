@@ -25,10 +25,10 @@ public class Text {
 
 	public int texid;		
 	private float vertices[] = { 
-			-0.6f, -0.7f, 0.0f, 	//Links unten
-			0.6f, -0.7f, 0.0f, 		//recht unten
-			-0.6f, 0.7f, 0.0f, 		//link Oben
-			0.6f, 0.7f, 0.0f 		//recht oben
+			0f, 0f,0.0f, 	//Links unten
+			100.0f,0.f,0.f, 		//recht unten
+			0.f, 25.5f, 0.0f, 		//link Oben
+			100.f, 25.5f, 0.0f 		//recht oben
 	};
 
 
@@ -101,22 +101,24 @@ public int loadtext(GL10 gl , Context context, String text) {
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		 opts.inScaled = false;
 		
-		 Bitmap bitmap = Bitmap.createBitmap(64,32, Bitmap.Config.RGB_565);
-		 bitmap.eraseColor(Color.GRAY); 
+		 Bitmap bitmap = Bitmap.createBitmap(100,25, Bitmap.Config.RGB_565);
+		 bitmap.eraseColor(Color.argb(255, 0, 102, 0));
 		 Canvas canvas = new Canvas(bitmap);
 		 Paint textPaint = new Paint(); 
-		 textPaint.setTextSize(8); 
+		 textPaint.setTextSize(25); 
 		 textPaint.setTextAlign(Align.CENTER);
 		 textPaint.setAntiAlias(true);
-		// textPaint.setARGB(255, 255, 255, 255); 
-		 textPaint.setColor(Color.BLUE);
-		 canvas.drawText(text, 90, 20, textPaint); 
+		textPaint.setColor(Color.BLACK); 
+		// textPaint.setARGB(255,51,204,0);
+		 canvas.drawText(text,50,20, textPaint); 
 		
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, id);
 
 			// Set all of our texture parameters:
-			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
-			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
+			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
+			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_ALIASED_LINE_WIDTH_RANGE, GL10.GL_NEAREST);
+			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_ALIASED_POINT_SIZE_RANGE, GL10.GL_NEAREST);
 			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
 			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
 

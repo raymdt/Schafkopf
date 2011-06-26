@@ -14,11 +14,13 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import forms.Karte;
 import forms.Player;
+import forms.Text;
 
 public class KarteViewRender extends GLSurfaceView implements Renderer {
 
 	//private Karte karte;	
 	private Karte selectedKarte = null;
+	private int stapelzeiger=0;
 
 	 private final float TOUCH_SCALE_FACTOR = 500.f/320;
 	private Context context;
@@ -30,9 +32,7 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 	private float x = 0.0f;			
 	private float y = 0.0f;					
 	
-	private float xscale=1f;
-	private float yscale=1f;
-	private float zscale=1f;
+
 
 
 	private float mPreviousX;
@@ -41,6 +41,7 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 	Player testplayer;
 	List<Karte>playerKarten = new ArrayList<Karte>();
 	List<Karte> stapel = new ArrayList<Karte>();
+	List<Text> spielerNamen = new ArrayList<Text>();
 	
 	
 	public KarteViewRender(Context context) {
@@ -54,11 +55,16 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		
 		testplayer = new Player("charly");
 		for(int i=0;i<8;i++) {
-			playerKarten.add(new Karte(i));
+			playerKarten.add(new Karte(i,"bilpng.png"));
+			
 		}
 		
 		for(int j=0;j<4;j++) {
-			stapel.add(new Karte(20-j));
+			stapel.add(new Karte(20-j,"back.png"));
+		}
+		
+		for(int k=0;k<4;k++) {
+			spielerNamen.add(new Text());
 		}
 
 	}
@@ -94,6 +100,7 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glOrthof(0,this.getWidth(),0,this.getHeight(), 1, -1);
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 
 
 		//Main Karten zeichnen
@@ -103,7 +110,7 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 			gl.glTranslatef(70*j,0, 0);
 			gl.glScalef(temp.getScaleX(), temp.getScaleY(),1);
 			temp.setPosX(70*j);
-			temp.draw(gl, this.context,"bipng.png");
+			temp.draw(gl, this.context);
 			Log.d("LES POSITIONS de "+j, temp.getPosX()+"   "+temp.getPosY());
 			gl.glPopMatrix();
 			
@@ -116,12 +123,23 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		for(int i=0;i<stapel.size();i++) {
 			gl.glPushMatrix();
 			Karte temp2 = stapel.get(i);
-			gl.glTranslatef(70*i,150.f, 0);
+			gl.glTranslatef(interval,140.f, 0);
 			temp2.setPosX(70*i);
-			temp2.setPosY(150.f);
-			temp2.draw(gl, this.context, "bilpng.png");		
+			temp2.setPosY(140.f);
+			temp2.draw(gl, this.context);		
 			gl.glPopMatrix();
 			interval+=70;
+		}
+		
+		
+		
+		for(int i=0;i<spielerNamen.size();i++) {
+			gl.glPushMatrix();
+			Text t = spielerNamen.get(i);
+			gl.glTranslatef(157*i,270.f, 0);
+		
+			t.draw(gl, this.context,"PLAYER "+i);		
+			gl.glPopMatrix();
 		}
 		
 		
@@ -171,7 +189,11 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 				 karte.setSizeY(karte.getSizeY()/1.2f);
 
 				 karte.setSelect(false);
+				 stapel.set(stapelzeiger, karte);
+				 playerKarten.set(i, new Karte(i,"back.png"));
+				 
 				 this.selectedKarte=null;
+				 stapelzeiger = (stapelzeiger+1)%4;
 			 }
 				 else {
 				 karte.setScaleX(1.2f);

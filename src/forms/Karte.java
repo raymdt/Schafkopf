@@ -22,7 +22,7 @@ public class Karte {
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
-	public String imageUrl;
+
 	private float posX =0;
 	private float posY =0;
 	private float sizeX=56;
@@ -31,7 +31,7 @@ public class Karte {
 	private float scaleY = 1;
 	private boolean isSelect;
 	public int karteId;
-	
+	private String texturUrl;
 
 
 
@@ -84,7 +84,7 @@ public class Karte {
 			1.0f, 0.0f };	
 
 
-	public Karte(int id) {
+	public Karte(int id, String url) {
 
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -101,6 +101,7 @@ public class Karte {
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
 		isSelect= false;
+		this.texturUrl = url;
 	}
 
 
@@ -109,20 +110,22 @@ public class Karte {
 		
 		if(x>=(posX) && x<=(posX+sizeX)){
 			if(y>=(posY)&& y<=(posY+sizeY)) {
-				return true;
+				if(!this.texturUrl.equals("back.png"))
+					return true;
 			}
 		}
 		return false;
 	}
 
 
-	public void draw(GL10 gl,Context context,String url) {	
+	
+	public void draw(GL10 gl,Context context) {	
 
 
 		gl.glFrontFace(GL10.GL_CW);
 
 
-		int id = loadTexture(gl, context, url);
+		int id = loadTexture(gl, context, this.texturUrl);
 
 
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
@@ -201,8 +204,10 @@ public class Karte {
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, id);
 
 		// Set all of our texture parameters:
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_ALIASED_LINE_WIDTH_RANGE, GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_ALIASED_POINT_SIZE_RANGE, GL10.GL_NEAREST);
 		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
 		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
 
@@ -253,19 +258,6 @@ public class Karte {
 	public void setTextureBuffer(FloatBuffer textureBuffer) {
 		this.textureBuffer = textureBuffer;
 	}
-
-
-
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
 
 
 	public float getPosX() {
@@ -388,6 +380,26 @@ public class Karte {
 
 	public void setSelect(boolean isSelect) {
 		this.isSelect = isSelect;
+	}
+
+
+	public int getKarteId() {
+		return karteId;
+	}
+
+
+	public void setKarteId(int karteId) {
+		this.karteId = karteId;
+	}
+
+
+	public String getUrl() {
+		return texturUrl;
+	}
+
+
+	public void setUrl(String url) {
+		this.texturUrl = url;
 	}
 
 
