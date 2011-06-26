@@ -105,7 +105,8 @@ public int loadtext(GL10 gl , Context context, String text) {
 		 bitmap.eraseColor(Color.argb(255, 0, 102, 0));
 		 Canvas canvas = new Canvas(bitmap);
 		 Paint textPaint = new Paint(); 
-		 textPaint.setTextSize(25); 
+		 textPaint.setTextSize(20);
+		
 		 textPaint.setTextAlign(Align.CENTER);
 		 textPaint.setAntiAlias(true);
 		textPaint.setColor(Color.BLACK); 

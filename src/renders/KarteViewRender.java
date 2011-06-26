@@ -2,6 +2,7 @@ package renders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -21,10 +22,10 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 	//private Karte karte;	
 	private Karte selectedKarte = null;
 	private int stapelzeiger=0;
-
+	private Karte table = new Karte(10000, "tableh.png");
 	 private final float TOUCH_SCALE_FACTOR = 500.f/320;
 	private Context context;
-	
+	private List<Text> spielInfo = new ArrayList<Text>();
 	private GL10 currentGl;
 
 
@@ -61,11 +62,13 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		
 		for(int j=0;j<4;j++) {
 			stapel.add(new Karte(20-j,"back.png"));
+			spielerNamen.add(new Text());
+			spielInfo.add(new Text());
 		}
 		
-		for(int k=0;k<4;k++) {
-			spielerNamen.add(new Text());
-		}
+	
+		
+		
 
 	}
 
@@ -102,6 +105,18 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		gl.glOrthof(0,this.getWidth(),0,this.getHeight(), 1, -1);
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 
+		
+		
+		//Table
+			gl.glPushMatrix();
+			gl.glTranslatef(0,0, 0);
+			gl.glScalef(11,3,1);
+			table.draw(gl, this.context);
+			gl.glPopMatrix();
+			
+		
+		
+		
 
 		//Main Karten zeichnen
 		for(int j =0; j <playerKarten.size();j++) {
@@ -119,7 +134,7 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		
 		//Stapel zeichnen
 		
-		float interval= 140;
+		float interval= 50;
 		for(int i=0;i<stapel.size();i++) {
 			gl.glPushMatrix();
 			Karte temp2 = stapel.get(i);
@@ -131,14 +146,38 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 			interval+=70;
 		}
 		
+	
+		//spielInformationen Zeichnen
+		float interval2= 140;
+		for(int i=0;i<spielInfo.size();i++) {
+			gl.glPushMatrix();
+			Text t1 = spielInfo.get(i);
+			gl.glTranslatef(370,interval2, 0);
+			gl.glScalef(1.8f, 1f, 1f);
+			t1.draw(gl, this.context,"SpielInfo "+i);		
+			gl.glPopMatrix();
+			interval2+=25.5;
+		}
+		
 		
 		
 		for(int i=0;i<spielerNamen.size();i++) {
 			gl.glPushMatrix();
 			Text t = spielerNamen.get(i);
-			gl.glTranslatef(157*i,270.f, 0);
+			gl.glTranslatef(157*i,295.f, 0);
 		
 			t.draw(gl, this.context,"PLAYER "+i);		
+			gl.glPopMatrix();
+		}
+		
+		
+		
+		for(int i=0;i<spielerNamen.size();i++) {
+			gl.glPushMatrix();
+			Text t = spielerNamen.get(i);
+			gl.glTranslatef(157*i,268.f, 0);
+			
+			t.draw(gl, this.context,new Random().nextInt(1000)+"");		
 			gl.glPopMatrix();
 		}
 		
@@ -221,7 +260,7 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 	}
 }
 		else {
-			Log.d("BOOOOO","Nicht select");
+			Log.d("BOOOOO",this.getWidth()+"  "+this.getHeight());
 		}
 	}
 		return true;
