@@ -40,7 +40,7 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 	
 	Player testplayer;
 	List<Karte>playerKarten = new ArrayList<Karte>();
-	List<Karte> statpel = new ArrayList<Karte>();
+	List<Karte> stapel = new ArrayList<Karte>();
 	
 	
 	public KarteViewRender(Context context) {
@@ -57,6 +57,9 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 			playerKarten.add(new Karte(i));
 		}
 		
+		for(int j=0;j<4;j++) {
+			stapel.add(new Karte(20-j));
+		}
 
 	}
 
@@ -93,20 +96,34 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 		gl.glOrthof(0,this.getWidth(),0,this.getHeight(), 1, -1);
 
 
-		
+		//Main Karten zeichnen
 		for(int j =0; j <playerKarten.size();j++) {
 			gl.glPushMatrix();
 			Karte temp = playerKarten.get(j);			
 			gl.glTranslatef(70*j,0, 0);
 			gl.glScalef(temp.getScaleX(), temp.getScaleY(),1);
 			temp.setPosX(70*j);
-			temp.draw(gl, this.context,"bilpng.png");
+			temp.draw(gl, this.context,"bipng.png");
 			Log.d("LES POSITIONS de "+j, temp.getPosX()+"   "+temp.getPosY());
 			gl.glPopMatrix();
-		
 			
 		}
-
+		
+		
+		//Stapel zeichnen
+		
+		float interval= 140;
+		for(int i=0;i<stapel.size();i++) {
+			gl.glPushMatrix();
+			Karte temp2 = stapel.get(i);
+			gl.glTranslatef(70*i,150.f, 0);
+			temp2.setPosX(70*i);
+			temp2.setPosY(150.f);
+			temp2.draw(gl, this.context, "bilpng.png");		
+			gl.glPopMatrix();
+			interval+=70;
+		}
+		
 		
 
 	setRenderMode(RENDERMODE_WHEN_DIRTY);
