@@ -20,6 +20,11 @@ public class Text {
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
+	
+	private int textFarbe= Color.BLACK;
+	
+	private String anzeigeText="";
+	
 
 
 
@@ -61,13 +66,13 @@ public class Text {
 
 
 
-	public void draw(GL10 gl,Context context,String text) {	
+	public void draw(GL10 gl,Context context,String text,int groesse) {	
 
 		
 		gl.glFrontFace(GL10.GL_CW);
 
 		
-	int id = loadtext(gl, context, text);
+	int id = loadtext(gl, context, text,groesse);
 
 
 		//////////////////SCHRIFT/////////////////////////////////////
@@ -89,7 +94,7 @@ public class Text {
 	}
 
 	
-public int loadtext(GL10 gl , Context context, String text) {
+public int loadtext(GL10 gl , Context context, String text,int groesse) {
 		
 		
 		int id = newTextureID(gl);
@@ -105,11 +110,11 @@ public int loadtext(GL10 gl , Context context, String text) {
 		 bitmap.eraseColor(Color.argb(255, 0, 102, 0));
 		 Canvas canvas = new Canvas(bitmap);
 		 Paint textPaint = new Paint(); 
-		 textPaint.setTextSize(20);
+		 textPaint.setTextSize(groesse);
 		
 		 textPaint.setTextAlign(Align.CENTER);
 		 textPaint.setAntiAlias(true);
-		textPaint.setColor(Color.BLACK); 
+		textPaint.setColor(textFarbe); 
 		// textPaint.setARGB(255,51,204,0);
 		 canvas.drawText(text,50,20, textPaint); 
 		
@@ -156,6 +161,30 @@ public int loadtext(GL10 gl , Context context, String text) {
 		int[] temp = new int[1];
 		gl.glGenTextures(1, temp,0);
 		return temp[0];
+	}
+
+
+
+	public int getTextFarbe() {
+		return textFarbe;
+	}
+
+
+
+	public void setTextFarbe(int textFarbe) {
+		this.textFarbe = textFarbe;
+	}
+
+
+
+	public String getAnzeigeText() {
+		return anzeigeText;
+	}
+
+
+
+	public void setAnzeigeText(String anzeigeText) {
+		this.anzeigeText = anzeigeText;
 	}
 
 	

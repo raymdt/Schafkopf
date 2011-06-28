@@ -2,11 +2,11 @@ package renders;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import MobileAnwendungen.Schafkopf.GameConnection;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
@@ -21,11 +21,13 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 
 	//private Karte karte;	
 	private Karte selectedKarte = null;
+	private Text infoBox = null;
 	private int stapelzeiger=0;
-	private Karte table = new Karte(10000, "tableh.png");
+	private Karte table = new Karte("tableh.png");
 	 private final float TOUCH_SCALE_FACTOR = 500.f/320;
 	private Context context;
 	private List<Text> spielInfo = new ArrayList<Text>();
+	private GameConnection gameConnection;
 	private GL10 currentGl;
 
 
@@ -35,43 +37,59 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 	
 
 
+	
 
 	private float mPreviousX;
 	private float mpreviousY;
 	
-	Player testplayer;
-	List<Karte>playerKarten = new ArrayList<Karte>();
-	List<Karte> stapel = new ArrayList<Karte>();
-	List<Text> spielerNamen = new ArrayList<Text>();
+	private Player thisPlayer;
+	private List<Karte> playerKarten = new ArrayList<Karte>();
+	private List<Karte> stapel = new ArrayList<Karte>();
+	private List<Text> spielerNamen = new ArrayList<Text>();
+	private List<Text> spielerScores = new ArrayList<Text>();
 	
 	
-	public KarteViewRender(Context context) {
+	
+	public KarteViewRender(Context context,GameConnection game ,String[] mycards,String[] spielerNamen,int[] spielerScores) {
 		super(context);
 		this.setRenderer(this);
 		this.requestFocus();
 		this.setFocusableInTouchMode(true);
 
 		this.context = context;		
-	//	karte = new Karte(1000);
 		
-		testplayer = new Player("charly");
-		for(int i=0;i<8;i++) {
-			playerKarten.add(new Karte(i,"bilpng.png"));
-			
-		}
+		this.gameConnection = game;
+		thisPlayer = new Player("charly");
+
+		setMyCards(mycards);
+		setNames(spielerNamen);
+		setPoint(spielerScores);
 		
 		for(int j=0;j<4;j++) {
-			stapel.add(new Karte(20-j,"back.png"));
-			spielerNamen.add(new Text());
+			stapel.add(new Karte("back.png"));
 			spielInfo.add(new Text());
 		}
-		
-	
-		
-		
 
 	}
 
+	
+	public void setGameTyp(String typ) {
+		
+		
+			Text t1 = new Text();
+			t1.setAnzeigeText("SpielTyp");
+			spielInfo.add(t1);
+			
+			Text t2 = new Text();
+			t2.setAnzeigeText(typ);
+			spielInfo.add(t2);
+			
+			Text t3 = new Text();
+			t3.setAnzeigeText("Runde Nr:");
+			
+			spielInfo.add(t3);
+		
+	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {		
 
@@ -111,7 +129,7 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 			gl.glPushMatrix();
 			gl.glTranslatef(0,0, 0);
 			gl.glScalef(11,3,1);
-			table.draw(gl, this.context);
+		//	table.draw(gl, this.context);
 			gl.glPopMatrix();
 			
 		
@@ -154,30 +172,33 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 			Text t1 = spielInfo.get(i);
 			gl.glTranslatef(370,interval2, 0);
 			gl.glScalef(1.8f, 1f, 1f);
-			t1.draw(gl, this.context,"SpielInfo "+i);		
+			t1.draw(gl, this.context,t1.getAnzeigeText(),15);
 			gl.glPopMatrix();
 			interval2+=25.5;
 		}
 		
 		
+		//SpielerNamenZeichnen
 		
 		for(int i=0;i<spielerNamen.size();i++) {
 			gl.glPushMatrix();
 			Text t = spielerNamen.get(i);
 			gl.glTranslatef(157*i,295.f, 0);
 		
-			t.draw(gl, this.context,"PLAYER "+i);		
+			t.draw(gl, this.context,t.getAnzeigeText(),15);		
 			gl.glPopMatrix();
 		}
 		
 		
-		
-		for(int i=0;i<spielerNamen.size();i++) {
+		//SpielerScore Zeichnen
+		for(int i=0;i<spielerScores.size();i++) {
 			gl.glPushMatrix();
-			Text t = spielerNamen.get(i);
+			Text t = spielerScores.get(i);
 			gl.glTranslatef(157*i,268.f, 0);
 			
-			t.draw(gl, this.context,new Random().nextInt(1000)+"");		
+			t.draw(gl, this.context,t.getAnzeigeText(),15);
+			//t.draw(gl, this.context,new Random().nextInt(15)+"",13);
+			
 			gl.glPopMatrix();
 		}
 		
@@ -229,8 +250,8 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 
 				 karte.setSelect(false);
 				 stapel.set(stapelzeiger, karte);
-				 playerKarten.set(i, new Karte(i,"back.png"));
-				 
+				 playerKarten.set(i, new Karte("back.png"));
+				 gameConnection.sendCard(karte.getUrl(), 2+"");
 				 this.selectedKarte=null;
 				 stapelzeiger = (stapelzeiger+1)%4;
 			 }
@@ -267,6 +288,32 @@ public class KarteViewRender extends GLSurfaceView implements Renderer {
 	}
 	
 	
+	
+	public void setMyCards(String[] cards) {
+		for(int i=0;i<cards.length;i++) {
+			playerKarten.add(new Karte(cards[i]));
+		}
+	}
+	
+	
+	public void setNames(String[] namen) {
+		for(int i=0;i<namen.length;i++) {
+			Text temp = new Text();
+			String merkmal = i==0?"":" (du)";
+			temp.setAnzeigeText(namen[i]+merkmal);
+			spielerNamen.add(temp);
+		}
+	}
+	
+	public void setPoint(int[] points) {
+		
+		for(int i=0;i<points.length;i++) {
+			Text tmp = new Text();
+			
+			tmp.setAnzeigeText(points[i]+"");
+			spielerScores.add(tmp);
+		}
+	}
 	
 	
 }

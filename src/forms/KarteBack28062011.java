@@ -18,7 +18,7 @@ import android.graphics.Matrix;
 import android.opengl.GLUtils;
 
 
-public class Karte {
+public class KarteBack28062011 {
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
@@ -30,9 +30,9 @@ public class Karte {
 	private float scaleX = 1;
 	private float scaleY = 1;
 	private boolean isSelect;
-
+	public int karteId;
 	private String texturUrl;
-	
+
 
 
 
@@ -55,6 +55,25 @@ public class Karte {
 
 
 
+	//	private float vertices[] = { 
+	//			-0.1f, -0.3f, 0.0f, 	//Links unten
+	//			0.1f, -0.3f, 0.0f, 		//recht unten
+	//			-0.1f, 0.3f, 0.0f, 		//link Oben
+	//			0.1f, 0.3f, 0.0f 		//recht oben
+	//	};
+
+	/*
+	 * 1   2
+	 * 3   4
+	 */
+	//	private float texture[] = {    		
+	//			1.0f, 0.0f,
+	//			0.0f, 0.0f,		
+	//			1.0f, 1.0f,		
+	//			0.0f, 1.0f,     
+	//			
+	//	
+	//	};
 
 
 
@@ -65,7 +84,7 @@ public class Karte {
 			1.0f, 0.0f };	
 
 
-	public Karte(String url) {
+	public KarteBack28062011(int id, String url) {
 
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -73,7 +92,7 @@ public class Karte {
 		vertexBuffer = byteBuf.asFloatBuffer();
 		vertexBuffer.put(vertices);
 		vertexBuffer.position(0);
-	
+		this.karteId = id;
 
 
 		byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
@@ -363,6 +382,15 @@ public class Karte {
 		this.isSelect = isSelect;
 	}
 
+
+	public int getKarteId() {
+		return karteId;
+	}
+
+
+	public void setKarteId(int karteId) {
+		this.karteId = karteId;
+	}
 
 
 	public String getUrl() {
